@@ -1,28 +1,33 @@
 const allSlides = document.querySelector(".slide-container").children;
 const allThumbnails = document.querySelector(".thumbnail-column").children;
+const slideWidth = allSlides[0].offsetWidth / 10;
 let currentSlide = 0;
 let currentThumbnail = 0;
+let totalWidth = 0;
+let viewSlide = 0;
 let thumbnailInterval, slideInterval;
+
+//Get All Slides Width
+for (const slide of allSlides) {
+  totalWidth -= slide.offsetWidth / 10;
+}
 
 function changeSlide() {
   slideInterval = setInterval(() => {
-    for (const slide of allSlides) {
-      slide.classList.remove("active");
+    viewSlide -= slideWidth;
+
+    if (viewSlide == totalWidth) {
+      viewSlide = 0;
     }
 
-    for (const slide of allSlides) {
-      slide.classList.remove("out");
-    }
-
-    allSlides[currentSlide].classList.add("out");
+    allSlides[0].style.marginLeft = `${viewSlide}rem`;
 
     currentSlide += 1;
 
     if (currentSlide == allSlides.length) {
       currentSlide = 0;
     }
-    allSlides[currentSlide].classList.add("active");
-  }, 4000);
+  }, 6000);
 }
 changeSlide();
 
@@ -39,7 +44,7 @@ function thumbnailActive() {
     }
 
     allThumbnails[currentThumbnail].classList.add("active");
-  }, 4000);
+  }, 6000);
 }
 thumbnailActive();
 
@@ -47,16 +52,8 @@ function selectSlide() {
   for (let i = 0; i < allThumbnails.length; i++) {
     allThumbnails[i].addEventListener("click", function () {
       if (i != currentSlide) {
-        for (const slide of allSlides) {
-          slide.classList.remove("active");
-        }
-
-        for (const slide of allSlides) {
-          slide.classList.remove("out");
-        }
-
-        allSlides[currentSlide].classList.add("out");
-        allSlides[i].classList.add("active");
+        viewSlide = -slideWidth * i;
+        allSlides[0].style.marginLeft = `${viewSlide}rem`;
 
         allThumbnails[currentThumbnail].classList.remove("active");
         allThumbnails[i].classList.add("active");
